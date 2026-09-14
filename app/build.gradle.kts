@@ -59,10 +59,16 @@ android {
 }
 
 dependencies {
+    // AppCompat (required for Material3 resources)
+    implementation(libs.appcompat)
+
     // Compose
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
     debugImplementation(libs.compose.ui.tooling)
+
+    // Material3
+    implementation(libs.material3)
 
     // Hilt
     implementation(libs.hilt.android)
