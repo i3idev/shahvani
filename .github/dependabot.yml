@@ -1,0 +1,80 @@
+version: 2
+
+updates:
+  # ==========================================================
+  # Gradle / Android dependencies
+  # ==========================================================
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+      timezone: "UTC"
+
+    open-pull-requests-limit: 5
+
+    versioning-strategy: "increase"
+
+    labels:
+      - "dependencies"
+      - "android"
+
+    commit-message:
+      prefix: "deps"
+
+    groups:
+      android:
+        patterns:
+          - "androidx.*"
+          - "com.android.*"
+
+      compose:
+        patterns:
+          - "androidx.compose.*"
+          - "androidx.activity:*"
+          - "androidx.lifecycle:*"
+          - "androidx.navigation:*"
+
+      kotlin:
+        patterns:
+          - "org.jetbrains.kotlin.*"
+          - "org.jetbrains.kotlinx.*"
+
+      networking:
+        patterns:
+          - "com.squareup.retrofit2:*"
+          - "com.squareup.okhttp3:*"
+
+      database:
+        patterns:
+          - "androidx.room:*"
+
+      dependency-injection:
+        patterns:
+          - "com.google.dagger:*"
+          - "com.google.dagger.hilt:*"
+
+      image-loading:
+        patterns:
+          - "io.coil-kt:*"
+
+  # ==========================================================
+  # GitHub Actions
+  # ==========================================================
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:30"
+      timezone: "UTC"
+
+    open-pull-requests-limit: 3
+
+    labels:
+      - "dependencies"
+      - "github-actions"
+
+    commit-message:
+      prefix: "ci"
