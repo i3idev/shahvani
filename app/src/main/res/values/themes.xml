@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Theme using Material3 with proper attribute references -->
     <style name="Theme.Shahvani" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Material3 color attributes -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_variant</item>
         <item name="colorSecondary">@color/secondary</item>
@@ -15,6 +17,7 @@
         <item name="colorOnError">@color/on_error</item>
     </style>
 
+    <!-- Splash screen theme -->
     <style name="Theme.Shahvani.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
         <item name="windowSplashScreenBackground">@color/primary</item>
