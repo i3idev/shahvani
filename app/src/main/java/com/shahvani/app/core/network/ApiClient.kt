@@ -1,9 +1,12 @@
 package com.shahvani.app.core.network
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.shahvani.app.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -12,7 +15,6 @@ import okhttp3.CookieJar
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.jsoup.Jsoup
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import okhttp3.MediaType.Companion.toMediaType
@@ -37,21 +39,16 @@ object ApiClient {
 
     @Provides
     @Singleton
-    fun provideCookieJar(): CookieJar = object : CookieJar {
-        private val cookieStore = mutableMapOf<String, List<Cookie>>()
-
-        override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-            cookieStore[url.host] = cookies
-        }
-
-        override fun loadForRequest(url: HttpUrl): List<Cookie> {
-            return cookieStore[url.host] ?: emptyList()
-        }
+    fun providePersistentCookieJar(@ApplicationContext context: Context): CookieJar {
+        return PersistentCookieJar(context)
     }
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(cookieJar: CookieJar): OkHttpClient {
+    fun provideOkHttpClient(
+        cookieJar: CookieJar,
+        csrfTokenManager: CsrfTokenManager
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .cookieJar(cookieJar)
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -63,11 +60,22 @@ object ApiClient {
                         level = HttpLoggingInterceptor.Level.BODY
                     })
                 }
+                
+                // Add standard headers and CSRF token for mutation requests
                 addInterceptor { chain ->
-                    val request = chain.request().newBuilder()
+                    val originalRequest = chain.request()
+                    val requestBuilder = originalRequest.newBuilder()
                         .addHeader("Accept", "application/json")
-                        .build()
-                    chain.proceed(request)
+                    
+                    // Add CSRF token for POST, PUT, PATCH, DELETE requests
+                    if (originalRequest.method in listOf("POST", "PUT", "PATCH", "DELETE")) {
+                        val csrfToken = csrfTokenManager.getToken()
+                        if (csrfToken != null) {
+                            requestBuilder.addHeader("X-CSRF-Token", csrfToken)
+                        }
+                    }
+                    
+                    chain.proceed(requestBuilder.build())
                 }
             }
             .build()
@@ -81,5 +89,54 @@ object ApiClient {
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
+    }
+}
+
+/**
+ * Persistent CookieJar that stores cookies in SharedPreferences
+ * This ensures session cookies survive app restarts
+ */
+private class PersistentCookieJar(private val context: Context) : CookieJar {
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences("cookies", Context.MODE_PRIVATE)
+    
+    override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+        val hostCookies = mutableMapOf<String, String>()
+        
+        // Store each cookie with its host
+        for (cookie in cookies) {
+            hostCookies[cookie.name] = cookie.toString()
+        }
+        
+        if (hostCookies.isNotEmpty()) {
+            prefs.edit().apply {
+                putStringSet("cookies_${url.host}", hostCookies.keys)
+                for ((name, value) in hostCookies) {
+                    putString("cookie_${url.host}_$name", value)
+                }
+                apply()
+            }
+        }
+    }
+
+    override fun loadForRequest(url: HttpUrl): List<Cookie> {
+        val result = mutableListOf<Cookie>()
+        val cookieNames = prefs.getStringSet("cookies_${url.host}", emptySet()) ?: emptySet()
+        
+        for (name in cookieNames) {
+            val cookieString = prefs.getString("cookie_${url.host}_$name", null)
+            if (cookieString != null) {
+                val cookie = Cookie.parse(url, cookieString)
+                if (cookie != null && !cookie.isExpired()) {
+                    result.add(cookie)
+                }
+            }
+        }
+        
+        return result
+    }
+    
+    private fun Cookie.isExpired(): Boolean {
+        return System.currentTimeMillis() > expiresAt
     }
 }
