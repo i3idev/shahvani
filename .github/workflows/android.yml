@@ -1,3 +1,4 @@
+```yaml
 name: Android CI
 
 on:
@@ -11,7 +12,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: android-ci-${{ github.ref }}
+  group: android-build-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -26,15 +27,9 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      # ─────────────────────────────────────────────
-      # Checkout
-      # ─────────────────────────────────────────────
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ─────────────────────────────────────────────
-      # Java
-      # ─────────────────────────────────────────────
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -42,9 +37,6 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: gradle
 
-      # ─────────────────────────────────────────────
-      # Android SDK
-      # ─────────────────────────────────────────────
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
@@ -54,18 +46,9 @@ jobs:
           sdkmanager "platforms;android-${ANDROID_API}"
           sdkmanager "build-tools;${BUILD_TOOLS}"
 
-      # ─────────────────────────────────────────────
-      # Validate project
-      # ─────────────────────────────────────────────
-      - name: Verify Gradle Wrapper
-        run: |
-          test -f ./gradlew
-          test -f ./gradle/wrapper/gradle-wrapper.properties
-          chmod +x ./gradlew
+      - name: Prepare Gradle
+        run: chmod +x ./gradlew
 
-      # ─────────────────────────────────────────────
-      # Build
-      # ─────────────────────────────────────────────
       - name: Build Debug APK
         run: |
           ./gradlew :app:assembleDebug \
@@ -73,28 +56,21 @@ jobs:
             --stacktrace \
             --build-cache
 
-      # ─────────────────────────────────────────────
-      # Verify APK
-      # ─────────────────────────────────────────────
       - name: Verify APK
         run: |
           APK="app/build/outputs/apk/debug/app-debug.apk"
 
-          if [ ! -f "$APK" ]; then
-            echo "::error::Debug APK was not generated."
-            exit 1
-          fi
+          test -f "$APK"
 
           echo "APK generated successfully:"
           ls -lh "$APK"
 
-      # ─────────────────────────────────────────────
-      # Upload APK
-      # ─────────────────────────────────────────────
-      - name: Upload Debug APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Shahvani-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
+```
+
