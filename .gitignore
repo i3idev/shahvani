@@ -227,3 +227,6 @@ reports/
 
 # temp/
 local.properties
+
+# Android local configuration
+local.properties
