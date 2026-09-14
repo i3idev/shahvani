@@ -61,6 +61,9 @@ android {
 dependencies {
     // AppCompat (required for Material3 resources)
     implementation(libs.appcompat)
+    
+    // Material3 Core (provides Material3 theme resources and attributes)
+    implementation(libs.material3.core)
 
     // Compose
     implementation(platform(libs.compose.bom))
