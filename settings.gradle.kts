@@ -1,10 +1,9 @@
 pluginManagement {
     repositories {
     
-        maven { url = uri("https://maven.myket.ir") }
+        maven { url = uri("https://maven.myket.ir") } // IRAN Repo
         maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
         maven { url = uri("https://maven.aliyun.com/repository/public") }
-        // اصلی‌ها (fallback)
         google()
         mavenCentral()
         gradlePluginPortal()
@@ -17,10 +16,9 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
     
-        maven { url = uri("https://maven.myket.ir") }
+        maven { url = uri("https://maven.myket.ir") } // IRAN Repo
         maven { url = uri("https://maven.aliyun.com/repository/public") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
-        // اصلی‌ها
         google()
         mavenCentral()
     }
