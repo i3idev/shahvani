@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">شهوانی</string>
+    <string name="login">ورود</string>
+    <string name="register">ثبت‌نام</string>
+    <string name="username">نام کاربری</string>
+    <string name="password">رمز عبور</string>
+    <string name="email">ایمیل</string>
+    <string name="home">خانه</string>
+    <string name="forum">انجمن</string>
+    <string name="profile">پروفایل</string>
+    <string name="messages">پیام‌ها</string>
+    <string name="notifications">اعلان‌ها</string>
+    <string name="search">جستجو</string>
+    <string name="settings">تنظیمات</string>
+    <string name="logout">خروج</string>
+    <string name="stories">داستان‌ها</string>
+    <string name="photos">عکس‌ها</string>
+    <string name="topics">تاپیک‌ها</string>
+    <string name="followers">دنبال‌کنندگان</string>
+    <string name="following">دنبال‌شده‌ها</string>
+    <string name="gallery">گالری</string>
+    <string name="stats">آمار</string>
+    <string name="block">بلاک</string>
+    <string name="unblock">آنبلاک</string>
+    <string name="like">لایک</string>
+    <string name="bookmark">نشانک</string>
+    <string name="reply">پاسخ</string>
+    <string name="send">ارسال</string>
+    <string name="cancel">لغو</string>
+    <string name="delete">حذف</string>
+    <string name="edit">ویرایش</string>
+    <string name="upload">آپلود</string>
+    <string name="retry">تلاش مجدد</string>
+    <string name="error_network">خطای اتصال به شبکه</string>
+    <string name="error_unknown">خطای ناشناخته</string>
+    <string name="loading">در حال بارگذاری…</string>
+    <string name="no_internet">اتصال به اینترنت برقرار نیست</string>
+</resources>

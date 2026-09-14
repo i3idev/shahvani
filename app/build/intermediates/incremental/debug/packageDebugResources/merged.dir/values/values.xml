@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#FFFFFBFE</color>
+    <color name="error">#FFB3261E</color>
+    <color name="on_background">#FF1C1B1F</color>
+    <color name="on_error">#FFFFFFFF</color>
+    <color name="on_primary">#FFFFFFFF</color>
+    <color name="on_secondary">#FF000000</color>
+    <color name="on_surface">#FF1C1B1F</color>
+    <color name="primary">#FF1976D2</color>
+    <color name="primary_variant">#FF1565C0</color>
+    <color name="secondary">#FF03DAC6</color>
+    <color name="secondary_variant">#FF018786</color>
+    <color name="surface">#FFFFFBFE</color>
+    <string name="app_name">شهوانی</string>
+    <string name="block">بلاک</string>
+    <string name="bookmark">نشانک</string>
+    <string name="cancel">لغو</string>
+    <string name="delete">حذف</string>
+    <string name="edit">ویرایش</string>
+    <string name="email">ایمیل</string>
+    <string name="error_network">خطای اتصال به شبکه</string>
+    <string name="error_unknown">خطای ناشناخته</string>
+    <string name="followers">دنبال‌کنندگان</string>
+    <string name="following">دنبال‌شده‌ها</string>
+    <string name="forum">انجمن</string>
+    <string name="gallery">گالری</string>
+    <string name="home">خانه</string>
+    <string name="like">لایک</string>
+    <string name="loading">در حال بارگذاری…</string>
+    <string name="login">ورود</string>
+    <string name="logout">خروج</string>
+    <string name="messages">پیام‌ها</string>
+    <string name="no_internet">اتصال به اینترنت برقرار نیست</string>
+    <string name="notifications">اعلان‌ها</string>
+    <string name="password">رمز عبور</string>
+    <string name="photos">عکس‌ها</string>
+    <string name="profile">پروفایل</string>
+    <string name="register">ثبت‌نام</string>
+    <string name="reply">پاسخ</string>
+    <string name="retry">تلاش مجدد</string>
+    <string name="search">جستجو</string>
+    <string name="send">ارسال</string>
+    <string name="settings">تنظیمات</string>
+    <string name="stats">آمار</string>
+    <string name="stories">داستان‌ها</string>
+    <string name="topics">تاپیک‌ها</string>
+    <string name="unblock">آنبلاک</string>
+    <string name="upload">آپلود</string>
+    <string name="username">نام کاربری</string>
+    <style name="Theme.Shahvani" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_variant</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_variant</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="colorOnBackground">@color/on_background</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorOnError">@color/on_error</item>
+    </style>
+    <style name="Theme.Shahvani.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenBackground">@color/primary</item>
+        <item name="postSplashScreenTheme">@style/Theme.Shahvani</item>
+    </style>
+</resources>
