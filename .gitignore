@@ -1,0 +1,228 @@
+# ============================================================
+
+# Android / Gradle
+
+# ============================================================
+
+.gradle/
+build/
+**/build/
+
+# Local Android SDK configuration
+
+local.properties
+
+# Gradle generated files
+
+.gradle/
+**/.gradle/
+
+# ============================================================
+
+# Android Studio / IntelliJ IDEA
+
+# ============================================================
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Android Studio generated metadata
+
+.externalNativeBuild/
+.cxx/
+
+# ============================================================
+
+# Kotlin
+
+# ============================================================
+
+.kotlin/
+.kotlin_module
+
+# Kotlin/Native
+
+*.klib
+
+# ============================================================
+
+# KSP / Generated Sources
+
+# ============================================================
+
+**/build/generated/
+**/build/ksp/
+**/build/generated/ksp/
+
+# ============================================================
+
+# Android Generated / Temporary Files
+
+# ============================================================
+
+captures/
+.navigation/
+*.hprof
+
+# APK / App Bundles
+
+*.apk
+*.aab
+
+# Mapping / native debug symbols
+
+mapping.txt
+*.mapping
+*.symbols
+
+# ============================================================
+
+# Signing / Keystores
+
+# ============================================================
+
+*.jks
+*.keystore
+*.p12
+*.pem
+
+# Never commit release signing configuration
+
+keystore.properties
+
+# ============================================================
+
+# Secrets / Environment Variables
+
+# ============================================================
+
+.env
+.env.*
+!.env.example
+
+*.secret
+secrets.properties
+secrets.xml
+
+# ============================================================
+
+# Firebase / Google Services
+
+# ============================================================
+
+# Ignore if it contains environment-specific credentials
+
+google-services.json
+
+# Keep a safe template if needed
+
+!google-services.example.json
+
+# ============================================================
+
+# OS Generated Files
+
+# ============================================================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+Thumbs.db
+Desktop.ini
+
+# ============================================================
+
+# Editor / Temporary Files
+
+# ============================================================
+
+*.swp
+*.swo
+*~
+*.tmp
+*.temp
+*.bak
+
+# Vim
+
+[.*]*.s[a-v][a-z]
+[.*]*.sw[a-p]
+
+# ============================================================
+
+# Logs
+
+# ============================================================
+
+*.log
+logs/
+
+# ============================================================
+
+# Crash / Profiling Artifacts
+
+# ============================================================
+
+*.hprof
+*.prof
+
+# ============================================================
+
+# Native / CMake
+
+# ============================================================
+
+.externalNativeBuild/
+.cxx/
+cmake-build-*/
+
+# ============================================================
+
+# Fastlane
+
+# ============================================================
+
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# ============================================================
+
+# Temporary Test / Benchmark Output
+
+# ============================================================
+
+test-results/
+reports/
+
+# ============================================================
+
+# Backup Files
+
+# ============================================================
+
+*.orig
+*.rej
+*.patch~
+*.save
+*.old
+
+# ============================================================
+
+# Project-specific generated files
+
+# ============================================================
+
+# Add project-specific generated/cache directories below.
+
+# Example:
+
+# generated/
+
+# cache/
+
+# temp/
