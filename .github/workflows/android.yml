@@ -1,10 +1,10 @@
-
 name: Android CI
 
 on:
   push:
     branches:
       - main
+
   workflow_dispatch:
 
 permissions:
@@ -26,15 +26,9 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      # ─────────────────────────────────────────────
-      # Checkout
-      # ─────────────────────────────────────────────
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ─────────────────────────────────────────────
-      # Java 17
-      # ─────────────────────────────────────────────
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -42,43 +36,46 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: gradle
 
-      # ─────────────────────────────────────────────
-      # Android SDK
-      # ─────────────────────────────────────────────
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android SDK packages
+      - name: Install Android SDK
         shell: bash
         run: |
           set -euo pipefail
 
+          SDKMANAGER="$(find "${ANDROID_HOME}/cmdline-tools" \
+            -type f \
+            -name sdkmanager \
+            | head -n 1)"
+
+          if [[ -z "${SDKMANAGER}" ]]; then
+            echo "::error::sdkmanager was not found."
+            exit 1
+          fi
+
+          echo "Using sdkmanager:"
+          echo "${SDKMANAGER}"
+
+          echo "sdkmanager version:"
+          "${SDKMANAGER}" --version
+
+          echo "Accepting Android SDK licenses..."
+          yes | "${SDKMANAGER}" --licenses >/dev/null || true
+
           echo "Installing Android SDK packages..."
-
-          yes | sdkmanager --licenses >/dev/null || true
-
-          sdkmanager \
+          "${SDKMANAGER}" \
             "platform-tools" \
             "platforms;android-${ANDROID_API}" \
             "build-tools;${BUILD_TOOLS}"
 
-      # ─────────────────────────────────────────────
-      # Environment
-      # ─────────────────────────────────────────────
       - name: Show build environment
+        shell: bash
         run: |
           java -version
+          echo
           ./gradlew --version
 
-      # ─────────────────────────────────────────────
-      # Gradle
-      # ─────────────────────────────────────────────
       - name: Prepare Gradle
         run: chmod +x ./gradlew
 
-      # ─────────────────────────────────────────────
-      # Build
-      # ─────────────────────────────────────────────
       - name: Build Debug APK
         run: |
           ./gradlew :app:assembleDebug \
@@ -86,9 +83,6 @@ jobs:
             --stacktrace \
             --build-cache
 
-      # ─────────────────────────────────────────────
-      # Verify output
-      # ─────────────────────────────────────────────
       - name: Verify APK
         shell: bash
         run: |
@@ -96,7 +90,7 @@ jobs:
 
           APK="app/build/outputs/apk/debug/app-debug.apk"
 
-          if [[ ! -f "$APK" ]]; then
+          if [[ ! -f "${APK}" ]]; then
             echo "::error::Debug APK was not generated."
             exit 1
           fi
@@ -104,12 +98,10 @@ jobs:
           echo "========================================"
           echo "APK BUILD SUCCESSFUL"
           echo "========================================"
-          ls -lh "$APK"
 
-      # ─────────────────────────────────────────────
-      # Upload
-      # ─────────────────────────────────────────────
-      - name: Upload Debug APK
+          ls -lh "${APK}"
+
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Shahvani-debug-apk
