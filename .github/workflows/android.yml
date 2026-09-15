@@ -42,6 +42,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          SDKMANAGER="${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"
+          test -x "${SDKMANAGER}" || { echo "::error::sdkmanager not found at ${SDKMANAGER}"; exit 1; }
+          export PATH="$(dirname "${SDKMANAGER}"):${PATH}"
+          echo "sdkmanager version: $(sdkmanager --version 2>&1 || true)"
           echo "Accepting Android SDK licenses..."
           yes | sdkmanager --licenses >/dev/null || true
           echo "Installing Android SDK packages..."
