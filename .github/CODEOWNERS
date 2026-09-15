@@ -4,36 +4,15 @@
 
 * @i3idev
 
-
 # ============================================================
-# Android Application
+# Key Paths (documentation — default owner applies)
 # ============================================================
 
 /app/ @i3idev
-
-
-# ============================================================
-# Gradle
-# ============================================================
-
 /gradle/ @i3idev
-*.gradle @i3idev
 *.gradle.kts @i3idev
 gradle.properties @i3idev
 settings.gradle.kts @i3idev
-
-
-# ============================================================
-# GitHub Actions / CI/CD
-# ============================================================
-
+gradle/libs.versions.toml @i3idev
 /.github/ @i3idev
 .github/workflows/ @i3idev
-
-
-# ============================================================
-# Dependency Management
-# ============================================================
-
-/gradle/libs.versions.toml @i3idev
-.github/dependabot.yml @i3idev

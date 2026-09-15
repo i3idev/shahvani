@@ -1,11 +1,9 @@
-
 name: Android Release
 
 on:
   push:
     tags:
       - "v*.*.*"
-
   workflow_dispatch:
 
 permissions:
@@ -27,17 +25,11 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      # ─────────────────────────────────────────────
-      # Checkout
-      # ─────────────────────────────────────────────
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # ─────────────────────────────────────────────
-      # Java
-      # ─────────────────────────────────────────────
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -45,28 +37,21 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: gradle
 
-      # ─────────────────────────────────────────────
-      # Android SDK
-      # ─────────────────────────────────────────────
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install Android SDK
+        shell: bash
         run: |
+          set -euo pipefail
+          echo "Accepting Android SDK licenses..."
+          yes | sdkmanager --licenses >/dev/null || true
+          echo "Installing Android SDK packages..."
           sdkmanager \
             "platform-tools" \
             "platforms;android-${ANDROID_API}" \
             "build-tools;${BUILD_TOOLS}"
 
-      # ─────────────────────────────────────────────
-      # Gradle
-      # ─────────────────────────────────────────────
       - name: Prepare Gradle
         run: chmod +x ./gradlew
 
-      # ─────────────────────────────────────────────
-      # Build Release APK + AAB
-      # ─────────────────────────────────────────────
       - name: Build Release
         run: |
           ./gradlew \
@@ -76,51 +61,24 @@ jobs:
             --stacktrace \
             --build-cache
 
-      # ─────────────────────────────────────────────
-      # Prepare artifacts
-      # ─────────────────────────────────────────────
       - name: Prepare Release Artifacts
-        shell: bash
         run: |
-          set -euo pipefail
-
           mkdir -p release
-
           APK=$(find app/build/outputs/apk/release -name "*.apk" -type f | head -n 1)
           AAB=$(find app/build/outputs/bundle/release -name "*.aab" -type f | head -n 1)
-
-          if [[ -z "$APK" ]]; then
-            echo "::error::Release APK was not generated."
-            exit 1
-          fi
-
-          if [[ -z "$AAB" ]]; then
-            echo "::error::Release AAB was not generated."
-            exit 1
-          fi
-
+          test -n "$APK" || { echo "::error::Release APK was not generated."; exit 1; }
+          test -n "$AAB" || { echo "::error::Release AAB was not generated."; exit 1; }
           cp "$APK" release/shahvani-release.apk
           cp "$AAB" release/shahvani-release.aab
-
           echo "Release artifacts:"
           ls -lh release/
 
-      # ─────────────────────────────────────────────
-      # SHA-256
-      # ─────────────────────────────────────────────
       - name: Generate SHA-256 Checksums
         working-directory: release
         run: |
-          sha256sum \
-            shahvani-release.apk \
-            shahvani-release.aab \
-            > SHA256SUMS.txt
-
+          sha256sum shahvani-release.apk shahvani-release.aab > SHA256SUMS.txt
           cat SHA256SUMS.txt
 
-      # ─────────────────────────────────────────────
-      # Upload workflow artifacts
-      # ─────────────────────────────────────────────
       - name: Upload Release Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -129,9 +87,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      # ─────────────────────────────────────────────
-      # GitHub Release
-      # ─────────────────────────────────────────────
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -141,4 +96,3 @@ jobs:
             release/shahvani-release.apk
             release/shahvani-release.aab
             release/SHA256SUMS.txt
-

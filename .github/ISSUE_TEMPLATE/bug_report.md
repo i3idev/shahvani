@@ -37,7 +37,7 @@ assignees: ""
 
 ```text
 
-````
+```
 
 ## Screenshots / Recordings
 
@@ -53,5 +53,3 @@ assignees: ""
 * [ ] I can reproduce this issue.
 * [ ] I have removed passwords, tokens, API keys, and other sensitive information.
 * [ ] I have provided enough information to reproduce the issue.
-
-

@@ -4,9 +4,9 @@
 
 ## Changes
 
-- 
-- 
-- 
+-
+-
+-
 
 ## Type of Change
 
@@ -23,9 +23,8 @@
 
 ## Testing
 
-- [ ] `./gradlew test`
-- [ ] `./gradlew lint`
 - [ ] `./gradlew assembleDebug`
+- [ ] `./gradlew lint`
 
 ## Android
 

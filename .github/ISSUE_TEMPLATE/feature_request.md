@@ -12,8 +12,7 @@ assignees: ""
 
 ## Problem
 
-<!-- What problem does this feature solve? -->
-<!-- Who would benefit from it? -->
+<!-- What problem does this feature solve? Who would benefit from it? -->
 
 ## Proposed Solution
 
@@ -33,17 +32,17 @@ assignees: ""
 
 <!-- Describe realistic situations where this feature would be useful. -->
 
-- 
-- 
-- 
+-
+-
+-
 
 ## Functional Requirements
 
 <!-- What should the feature be able to do? -->
 
-- [ ] 
-- [ ] 
-- [ ] 
+- [ ]
+- [ ]
+- [ ]
 
 ## UI / UX
 
@@ -74,11 +73,9 @@ assignees: ""
 
 ### API Requirements
 
-<!-- Describe endpoints, HTTP methods, request data, response data, etc. -->
+```
 
-```text
-
-````
+```
 
 ## Data / Database
 
@@ -93,7 +90,8 @@ assignees: ""
 
 ### Data Requirements
 
-```text
+```
+
 ```
 
 ## Security Considerations
@@ -151,7 +149,8 @@ assignees: ""
 
 <!-- Optional: technical ideas, architecture considerations, libraries, or implementation suggestions. -->
 
-```text
+```
+
 ```
 
 ## Acceptance Criteria
@@ -189,4 +188,3 @@ assignees: ""
 * [ ] I have considered security implications.
 * [ ] I have considered performance implications.
 * [ ] I have provided enough information to evaluate the proposal.
-

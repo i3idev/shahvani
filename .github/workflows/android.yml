@@ -4,14 +4,16 @@ on:
   push:
     branches:
       - main
-
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: android-build-${{ github.ref }}
+  group: android-ci-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -40,41 +42,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
-          SDKMANAGER="$(find "${ANDROID_HOME}/cmdline-tools" \
-            -type f \
-            -name sdkmanager \
-            | head -n 1)"
-
-          if [[ -z "${SDKMANAGER}" ]]; then
-            echo "::error::sdkmanager was not found."
-            exit 1
-          fi
-
-          echo "Using sdkmanager:"
-          echo "${SDKMANAGER}"
-
-          echo "sdkmanager version:"
-          "${SDKMANAGER}" --version
-
           echo "Accepting Android SDK licenses..."
-          yes | "${SDKMANAGER}" --licenses >/dev/null || true
-
+          yes | sdkmanager --licenses >/dev/null || true
           echo "Installing Android SDK packages..."
-          "${SDKMANAGER}" \
+          sdkmanager \
             "platform-tools" \
             "platforms;android-${ANDROID_API}" \
             "build-tools;${BUILD_TOOLS}"
 
-      - name: Show build environment
-        shell: bash
+      - name: Verify Gradle wrapper
         run: |
-          java -version
-          echo
-          ./gradlew --version
-
-      - name: Prepare Gradle
-        run: chmod +x ./gradlew
+          test -f ./gradlew
+          test -f ./gradle/wrapper/gradle-wrapper.properties
+          chmod +x ./gradlew
 
       - name: Build Debug APK
         run: |
@@ -84,24 +64,12 @@ jobs:
             --build-cache
 
       - name: Verify APK
-        shell: bash
         run: |
-          set -euo pipefail
-
           APK="app/build/outputs/apk/debug/app-debug.apk"
-
-          if [[ ! -f "${APK}" ]]; then
-            echo "::error::Debug APK was not generated."
-            exit 1
-          fi
-
-          echo "========================================"
-          echo "APK BUILD SUCCESSFUL"
-          echo "========================================"
-
+          test -f "${APK}"
           ls -lh "${APK}"
 
-      - name: Upload APK
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: Shahvani-debug-apk
