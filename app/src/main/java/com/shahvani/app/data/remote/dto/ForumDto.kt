@@ -80,9 +80,33 @@ data class EditTopicRequest(
 )
 
 @Serializable
+data class LikeRequest(
+    val like: Boolean
+)
+
+@Serializable
 data class LikeResponse(
-    val success: Boolean,
-    val likes: Int
+    val likes: Int,
+    val dislikes: Int? = null,
+    val userLike: Boolean? = null,
+    val liked: Boolean? = null
+)
+
+@Serializable
+data class TopicResponseWrapper(
+    val data: TopicData
+)
+
+@Serializable
+data class TopicData(
+    val topic: TopicDto,
+    val posts: List<PostDto>? = null
+)
+
+@Serializable
+data class ForumCategoryResponse(
+    val forum: ForumCategoryDto,
+    val sub: List<ForumCategoryDto>? = null
 )
 
 @Serializable

@@ -147,13 +147,13 @@ private fun CategoryItem(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.topics) + ": ${category.topicsCount}",
+                    text = stringResource(R.string.topics_count, category.topicsCount),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Text(
-                    text = stringResource(R.string.posts) + ": ${category.postsCount}",
+                    text = stringResource(R.string.posts_count, category.postsCount),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

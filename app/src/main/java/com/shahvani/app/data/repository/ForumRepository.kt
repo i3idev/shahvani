@@ -8,6 +8,7 @@ import com.shahvani.app.data.remote.dto.CreateTopicRequest
 import com.shahvani.app.data.remote.dto.EditPostRequest
 import com.shahvani.app.data.remote.dto.EditTopicRequest
 import com.shahvani.app.data.remote.dto.ForumCategoryDto
+import com.shahvani.app.data.remote.dto.LikeRequest
 import com.shahvani.app.data.remote.dto.LikeResponse
 import com.shahvani.app.data.remote.dto.LikesListDto
 import com.shahvani.app.data.remote.dto.TopicDto
@@ -23,7 +24,8 @@ class ForumRepository @Inject constructor(
         return try {
             val response = forumApi.getCategories()
             if (response.isSuccessful && response.body() != null) {
-                Result.success(response.body()!!)
+                val categories = response.body()!!.map { it.forum }
+                Result.success(categories)
             } else {
                 Result.failure(Exception("Failed to load categories"))
             }
@@ -36,7 +38,8 @@ class ForumRepository @Inject constructor(
         return try {
             val response = forumApi.getTopic(slug)
             if (response.isSuccessful && response.body() != null) {
-                Result.success(response.body()!!)
+                val wrapper = response.body()!!
+                Result.success(wrapper.data.topic)
             } else {
                 Result.failure(Exception("Failed to load topic"))
             }
@@ -112,28 +115,24 @@ class ForumRepository @Inject constructor(
     }
     
     suspend fun likeTopic(topicId: Int): Result<LikeResponse> {
-        return try {
-            val response = forumApi.likeTopic(topicId)
+        return withCsrfToken {
+            val response = forumApi.likeTopic(topicId, LikeRequest(like = true))
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {
                 Result.failure(Exception("Failed to like topic"))
             }
-        } catch (e: Exception) {
-            Result.failure(e)
         }
     }
-    
+
     suspend fun likePost(postId: Int): Result<LikeResponse> {
-        return try {
+        return withCsrfToken {
             val response = forumApi.likePost(postId)
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {
                 Result.failure(Exception("Failed to like post"))
             }
-        } catch (e: Exception) {
-            Result.failure(e)
         }
     }
     
@@ -165,7 +164,7 @@ class ForumRepository @Inject constructor(
     
     suspend fun addBookmark(topicId: Int): Result<BookmarkResponse> {
         return withCsrfToken {
-            val response = forumApi.addBookmark(mapOf("topicId" to topicId))
+            val response = forumApi.addBookmark(mapOf("topic_id" to topicId))
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {

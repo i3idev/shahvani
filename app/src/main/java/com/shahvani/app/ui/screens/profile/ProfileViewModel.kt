@@ -47,7 +47,9 @@ class ProfileViewModel @Inject constructor(
                 onSuccess = { stats ->
                     _state.update { it.copy(stats = stats) }
                 },
-                onFailure = { }
+                onFailure = { error ->
+                    _state.update { it.copy(error = error.message) }
+                }
             )
             
             _state.update { it.copy(isLoading = false) }

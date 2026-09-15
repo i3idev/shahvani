@@ -20,6 +20,10 @@ class AuthRepository @Inject constructor(
     
     suspend fun login(username: String, password: String): Result<UserDto> {
         return try {
+            val csrfResult = csrfTokenManager.getOrFetchToken()
+            if (!csrfResult.isSuccess) {
+                return Result.failure(csrfResult.exceptionOrNull() ?: Exception("CSRF token fetch failed"))
+            }
             val response = authApi.login(AuthRequest(username, password))
             if (response.isSuccessful && response.body()?.user != null) {
                 val user = response.body()!!.user!!

@@ -6,9 +6,11 @@ import com.shahvani.app.data.remote.dto.CreateTopicRequest
 import com.shahvani.app.data.remote.dto.EditPostRequest
 import com.shahvani.app.data.remote.dto.EditTopicRequest
 import com.shahvani.app.data.remote.dto.ForumCategoryDto
+import com.shahvani.app.data.remote.dto.LikeRequest
 import com.shahvani.app.data.remote.dto.LikeResponse
 import com.shahvani.app.data.remote.dto.LikesListDto
 import com.shahvani.app.data.remote.dto.TopicDto
+import com.shahvani.app.data.remote.dto.TopicResponseWrapper
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -20,10 +22,10 @@ import retrofit2.http.Path
 interface ForumApi {
     
     @GET("/api/v1/forum")
-    suspend fun getCategories(): Response<List<ForumCategoryDto>>
+    suspend fun getCategories(): Response<List<ForumCategoryResponse>>
     
     @GET("/api/v1/forum/topic/{slug}")
-    suspend fun getTopic(@Path("slug") slug: String): Response<TopicDto>
+    suspend fun getTopic(@Path("slug") slug: String): Response<TopicResponseWrapper>
     
     @POST("/api/v1/forum/{forumId}/topics")
     suspend fun createTopic(
@@ -56,7 +58,7 @@ interface ForumApi {
     ): Response<Unit>
     
     @POST("/api/v1/forum/topics/{topicId}/like")
-    suspend fun likeTopic(@Path("topicId") topicId: Int): Response<LikeResponse>
+    suspend fun likeTopic(@Path("topicId") topicId: Int, @Body request: LikeRequest): Response<LikeResponse>
     
     @POST("/api/v1/forum/posts/{postId}/like")
     suspend fun likePost(@Path("postId") postId: Int): Response<LikeResponse>

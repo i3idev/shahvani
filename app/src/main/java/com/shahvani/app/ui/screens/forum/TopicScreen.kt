@@ -47,7 +47,7 @@ fun TopicScreen(
                     state.topic?.let { topic ->
                         IconButton(onClick = viewModel::likeTopic) {
                             Icon(
-                                imageVector = if (topic.likes > 0) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                imageVector = if (state.topicLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                                 contentDescription = null
                             )
                         }

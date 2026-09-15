@@ -18,7 +18,8 @@ data class TopicState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val isReplying: Boolean = false,
-    val replyContent: String = ""
+    val replyContent: String = "",
+    val topicLiked: Boolean = false
 )
 
 @HiltViewModel
@@ -77,21 +78,44 @@ class TopicViewModel @Inject constructor(
     
     fun likeTopic() {
         val topicId = _state.value.topic?.id ?: return
+        val isLiked = _state.topicLiked
         viewModelScope.launch {
-            forumRepository.likeTopic(topicId)
+            val result = forumRepository.likeTopic(topicId)
+            result.fold(
+                onSuccess = {
+                    _state.update { s ->
+                        s.copy(
+                            topicLiked = it.userLike ?: !isLiked,
+                            topic = s.topic?.copy(likes = it.likes)
+                        )
+                    }
+                },
+                onFailure = { error ->
+                    _state.update { it.copy(error = error.message) }
+                }
+            )
         }
     }
-    
+
     fun likePost(postId: Int) {
+        val topicId = _state.value.topic?.id ?: return
         viewModelScope.launch {
-            forumRepository.likePost(postId)
+            val result = forumRepository.likePost(postId)
+            result.fold(
+                onSuccess = {
+                    slug?.let { loadTopic(it) }
+                },
+                onFailure = { error ->
+                    _state.update { it.copy(error = error.message) }
+                }
+            )
         }
     }
-    
+
     fun toggleBookmark() {
         val topicId = _state.value.topic?.id ?: return
         val isBookmarked = _state.value.topic?.bookmarked ?: false
-        
+
         viewModelScope.launch {
             if (isBookmarked) {
                 forumRepository.removeBookmark(topicId)
