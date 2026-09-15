@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-
   workflow_dispatch:
 
 permissions:
@@ -24,12 +23,18 @@ jobs:
   build:
     name: Build Debug APK
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     steps:
+      # ─────────────────────────────────────────────
+      # Checkout
+      # ─────────────────────────────────────────────
       - name: Checkout
         uses: actions/checkout@v4
 
+      # ─────────────────────────────────────────────
+      # Java 17
+      # ─────────────────────────────────────────────
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -37,18 +42,43 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: gradle
 
+      # ─────────────────────────────────────────────
+      # Android SDK
+      # ─────────────────────────────────────────────
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Android SDK
+      - name: Install Android SDK packages
+        shell: bash
         run: |
-          sdkmanager "platform-tools"
-          sdkmanager "platforms;android-${ANDROID_API}"
-          sdkmanager "build-tools;${BUILD_TOOLS}"
+          set -euo pipefail
 
+          echo "Installing Android SDK packages..."
+
+          yes | sdkmanager --licenses >/dev/null || true
+
+          sdkmanager \
+            "platform-tools" \
+            "platforms;android-${ANDROID_API}" \
+            "build-tools;${BUILD_TOOLS}"
+
+      # ─────────────────────────────────────────────
+      # Environment
+      # ─────────────────────────────────────────────
+      - name: Show build environment
+        run: |
+          java -version
+          ./gradlew --version
+
+      # ─────────────────────────────────────────────
+      # Gradle
+      # ─────────────────────────────────────────────
       - name: Prepare Gradle
         run: chmod +x ./gradlew
 
+      # ─────────────────────────────────────────────
+      # Build
+      # ─────────────────────────────────────────────
       - name: Build Debug APK
         run: |
           ./gradlew :app:assembleDebug \
@@ -56,20 +86,33 @@ jobs:
             --stacktrace \
             --build-cache
 
+      # ─────────────────────────────────────────────
+      # Verify output
+      # ─────────────────────────────────────────────
       - name: Verify APK
+        shell: bash
         run: |
+          set -euo pipefail
+
           APK="app/build/outputs/apk/debug/app-debug.apk"
 
-          test -f "$APK"
+          if [[ ! -f "$APK" ]]; then
+            echo "::error::Debug APK was not generated."
+            exit 1
+          fi
 
-          echo "APK generated successfully:"
+          echo "========================================"
+          echo "APK BUILD SUCCESSFUL"
+          echo "========================================"
           ls -lh "$APK"
 
-      - name: Upload APK
+      # ─────────────────────────────────────────────
+      # Upload
+      # ─────────────────────────────────────────────
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: Shahvani-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
-
