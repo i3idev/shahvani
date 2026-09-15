@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.File
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -24,25 +27,31 @@ android {
     signingConfigs {
         create("release") {
             val keystorePropertiesFile = rootProject.file("keystore.properties")
-            val keystoreProperties = java.util.Properties()
+            val keystoreProperties = Properties()
             if (keystorePropertiesFile.exists()) {
                 keystoreProperties.load(keystorePropertiesFile.inputStream())
             }
-            val storeFile = keystoreProperties["storeFile"]?.let { java.io.File(it) }
+            val storeFile = keystoreProperties["storeFile"]?.let { File(it) }
             if (storeFile == null) {
-                throw gradleException(
+                throw Exception(
                     "Release signing not configured. Create 'keystore.properties' in project root with " +
                     "storeFile, storePassword, keyAlias, keyPassword. Or set STORE_FILE, STORE_PASSWORD, " +
                     "KEY_ALIAS, KEY_PASSWORD environment variables."
                 )
             }
             setStoreFile(storeFile)
-            setStorePassword(keystoreProperties["storePassword"] as? String ?: System.getenv("STORE_PASSWORD")
-                ?: throw gradleException("STORE_PASSWORD not set"))
-            setKeyAlias(keystoreProperties["keyAlias"] as? String ?: System.getenv("KEY_ALIAS")
-                ?: throw gradleException("KEY_ALIAS not set"))
-            setKeyPassword(keystoreProperties["keyPassword"] as? String ?: System.getenv("KEY_PASSWORD")
-                ?: throw gradleException("KEY_PASSWORD not set"))
+            val storePassword = keystoreProperties["storePassword"] as? String
+                ?: System.getenv("STORE_PASSWORD")
+                ?: throw Exception("STORE_PASSWORD not set")
+            setStorePassword(storePassword)
+            val keyAlias = keystoreProperties["keyAlias"] as? String
+                ?: System.getenv("KEY_ALIAS")
+                ?: throw Exception("KEY_ALIAS not set")
+            setKeyAlias(keyAlias)
+            val keyPassword = keystoreProperties["keyPassword"] as? String
+                ?: System.getenv("KEY_PASSWORD")
+                ?: throw Exception("KEY_PASSWORD not set")
+            setKeyPassword(keyPassword)
         }
     }
 
