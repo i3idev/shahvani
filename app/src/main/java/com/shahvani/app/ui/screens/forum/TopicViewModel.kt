@@ -78,7 +78,7 @@ class TopicViewModel @Inject constructor(
     
     fun likeTopic() {
         val topicId = _state.value.topic?.id ?: return
-        val isLiked = _state.topicLiked
+        val isLiked = _state.value.topicLiked
         viewModelScope.launch {
             val result = forumRepository.likeTopic(topicId)
             result.fold(

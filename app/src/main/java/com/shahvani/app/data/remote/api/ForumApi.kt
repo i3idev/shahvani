@@ -5,7 +5,7 @@ import com.shahvani.app.data.remote.dto.CreatePostRequest
 import com.shahvani.app.data.remote.dto.CreateTopicRequest
 import com.shahvani.app.data.remote.dto.EditPostRequest
 import com.shahvani.app.data.remote.dto.EditTopicRequest
-import com.shahvani.app.data.remote.dto.ForumCategoryDto
+import com.shahvani.app.data.remote.dto.ForumCategoryResponse
 import com.shahvani.app.data.remote.dto.LikeRequest
 import com.shahvani.app.data.remote.dto.LikeResponse
 import com.shahvani.app.data.remote.dto.LikesListDto
