@@ -25,7 +25,11 @@ class LoginViewModel @Inject constructor(
     
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
-    
+
+    init {
+        checkSession()
+    }
+
     fun onUsernameChange(value: String) {
         _state.update { it.copy(username = value, error = null) }
     }

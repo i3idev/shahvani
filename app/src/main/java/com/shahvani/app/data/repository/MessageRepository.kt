@@ -51,7 +51,7 @@ class MessageRepository @Inject constructor(
     }
     
     private suspend fun <T> withCsrfToken(action: suspend () -> Result<T>): Result<T> {
-        val csrfResult = csrfTokenManager.fetchToken()
+        val csrfResult = csrfTokenManager.getOrFetchToken()
         return if (csrfResult.isSuccess) {
             action()
         } else {

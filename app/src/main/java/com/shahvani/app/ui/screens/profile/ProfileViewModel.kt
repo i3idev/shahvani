@@ -1,6 +1,5 @@
 package com.shahvani.app.ui.screens.profile
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shahvani.app.data.local.entity.ProfileEntity
@@ -22,15 +21,12 @@ data class ProfileState(
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val profileRepository: ProfileRepository,
-    savedStateHandle: SavedStateHandle
+    private val profileRepository: ProfileRepository
 ) : ViewModel() {
     
     private val _state = MutableStateFlow(ProfileState())
     val state = _state.asStateFlow()
-    
-    private val username: String? = savedStateHandle["username"]
-    
+
     fun loadProfile(username: String) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }

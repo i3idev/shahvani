@@ -1,5 +1,6 @@
 package com.shahvani.app.data.repository
 
+import com.shahvani.app.core.network.CsrfTokenManager
 import com.shahvani.app.data.local.dao.UserSessionDao
 import com.shahvani.app.data.local.entity.UserSessionEntity
 import com.shahvani.app.data.remote.api.AuthApi
@@ -12,7 +13,8 @@ import javax.inject.Singleton
 @Singleton
 class AuthRepository @Inject constructor(
     private val authApi: AuthApi,
-    private val userSessionDao: UserSessionDao
+    private val userSessionDao: UserSessionDao,
+    private val csrfTokenManager: CsrfTokenManager
 ) {
     val sessionFlow: Flow<UserSessionEntity?> = userSessionDao.getSessionFlow()
     
@@ -65,6 +67,7 @@ class AuthRepository @Inject constructor(
         return try {
             val response = authApi.logout()
             userSessionDao.clearSession()
+            csrfTokenManager.clearToken()
             if (response.isSuccessful) {
                 Result.success(Unit)
             } else {

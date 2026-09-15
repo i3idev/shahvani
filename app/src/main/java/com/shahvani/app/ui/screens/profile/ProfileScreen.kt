@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.shahvani.app.BuildConfig
 import com.shahvani.app.R
 import com.shahvani.app.data.remote.dto.ProfileStatsDto
 
@@ -99,34 +98,37 @@ fun ProfileHeader(
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        cover?.let { coverUrl ->
-            AsyncImage(
-                model = coverUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp),
-                contentScale = ContentScale.Crop
-            )
-        }
-        
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = if (cover != null) (-48).dp else 16.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
+            if (cover != null) {
+                AsyncImage(
+                    model = cover,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
+            // Avatar centred at the bottom edge of the cover (or at top when no cover)
             AsyncImage(
                 model = avatar,
                 contentDescription = null,
                 modifier = Modifier
                     .size(96.dp)
+                    .align(Alignment.BottomCenter)
+                    .offset(y = 48.dp)
                     .clip(CircleShape)
-                    .align(Alignment.Center)
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentScale = ContentScale.Crop
             )
         }
-        
+
+        // Space equal to half the avatar height so the avatar isn't clipped
+        Spacer(modifier = Modifier.height(56.dp))
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -149,7 +151,7 @@ fun ProfileHeader(
                     )
                 }
             }
-            
+
             bio?.let {
                 Text(
                     text = it,

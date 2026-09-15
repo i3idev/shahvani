@@ -19,6 +19,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -41,21 +42,19 @@ fun HomeScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(R.string.home)
-                )
-            }
-        )
-
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = stringResource(R.string.home)) }
+            )
+        }
+    ) { padding ->
         when {
             state.isLoading -> {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
@@ -64,28 +63,23 @@ fun HomeScreen(
 
             state.error != null -> {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = state.error
-                                ?: stringResource(R.string.error_unknown),
+                            text = state.error ?: stringResource(R.string.error_unknown),
                             color = MaterialTheme.colorScheme.error
                         )
 
-                        Spacer(
-                            modifier = Modifier.height(16.dp)
-                        )
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                        Button(
-                            onClick = viewModel::loadCategories
-                        ) {
-                            Text(
-                                text = stringResource(R.string.retry)
-                            )
+                        Button(onClick = viewModel::loadCategories) {
+                            Text(text = stringResource(R.string.retry))
                         }
                     }
                 }
@@ -93,7 +87,9 @@ fun HomeScreen(
 
             else -> {
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -103,12 +99,7 @@ fun HomeScreen(
                     ) { category ->
                         CategoryItem(
                             category = category,
-                            onClick = {
-                                onCategoryClick(
-                                    category.id,
-                                    category.slug
-                                )
-                            }
+                            onClick = { onCategoryClick(category.id, category.slug) }
                         )
                     }
                 }
@@ -156,13 +147,13 @@ private fun CategoryItem(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "تاپیک‌ها: ${category.topicsCount}",
+                    text = stringResource(R.string.topics) + ": ${category.topicsCount}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Text(
-                    text = "پست‌ها: ${category.postsCount}",
+                    text = stringResource(R.string.posts) + ": ${category.postsCount}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

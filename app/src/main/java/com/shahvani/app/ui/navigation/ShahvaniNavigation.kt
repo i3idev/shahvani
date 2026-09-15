@@ -1,10 +1,21 @@
 package com.shahvani.app.ui.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.shahvani.app.R
 import com.shahvani.app.ui.screens.auth.LoginScreen
 import com.shahvani.app.ui.screens.forum.TopicScreen
 import com.shahvani.app.ui.screens.home.HomeScreen
@@ -28,22 +39,21 @@ fun ShahvaniNavigation(
                 }
             )
         }
-        
+
         composable<Screen.Home> {
             HomeScreen(
-                onCategoryClick = { categoryId, slug ->
+                onCategoryClick = { _, slug ->
                     navController.navigate(Screen.Topic(slug))
                 }
             )
         }
-        
-        composable<Screen.Topic> { backStackEntry ->
-            val route = backStackEntry.toRoute<Screen.Topic>()
+
+        composable<Screen.Topic> {
             TopicScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-        
+
         composable<Screen.Profile> { backStackEntry ->
             val route = backStackEntry.toRoute<Screen.Profile>()
             ProfileScreen(
@@ -53,17 +63,34 @@ fun ShahvaniNavigation(
                 }
             )
         }
-        
+
         composable<Screen.Messages> {
-            // TODO: MessagesScreen
+            PlaceholderScreen(title = stringResource(R.string.messages))
         }
-        
+
         composable<Screen.Notifications> {
-            // TODO: NotificationsScreen
+            PlaceholderScreen(title = stringResource(R.string.notifications))
         }
-        
+
         composable<Screen.Settings> {
-            // TODO: SettingsScreen
+            PlaceholderScreen(title = stringResource(R.string.settings))
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PlaceholderScreen(title: String) {
+    Scaffold(
+        topBar = { TopAppBar(title = { Text(title) }) }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = title)
         }
     }
 }

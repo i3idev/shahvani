@@ -28,6 +28,7 @@ compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 activity-compose = { module = "androidx.activity:activity-compose", version = "1.9.2" }
 lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 
 # Material3 Support
@@ -80,7 +81,7 @@ compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", versio
 compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version = "1.7.2" }
 
 [bundles]
-compose = ["compose-ui", "compose-material3", "compose-material-icons", "compose-ui-tooling-preview", "activity-compose", "lifecycle-viewmodel-compose", "navigation-compose", "paging-compose"]
+compose = ["compose-ui", "compose-material3", "compose-material-icons", "compose-ui-tooling-preview", "activity-compose", "lifecycle-viewmodel-compose", "lifecycle-runtime-compose", "navigation-compose", "paging-compose"]
 network = ["retrofit", "retrofit-kotlinx-serialization", "okhttp", "okhttp-logging", "jsoup", "kotlinx-serialization-json"]
 room = ["room-runtime", "room-ktx"]
 

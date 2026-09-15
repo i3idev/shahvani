@@ -13,9 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import com.shahvani.app.data.repository.AuthRepository
 import com.shahvani.app.ui.navigation.Screen
 import com.shahvani.app.ui.navigation.ShahvaniNavigation
 import com.shahvani.app.ui.screens.auth.LoginViewModel
