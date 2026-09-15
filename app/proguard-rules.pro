@@ -3,22 +3,22 @@
 # proguardFiles setting in build.gradle.kts.
 
 # Keep Kotlinx Serialization
--keepattributes *Annotation*, InnerClasses
+-keepattributes *Annotation*, InnerClasses, EnclosingMethod
 -dontnote kotlinx.serialization.AnnotationsKt
 
--keepclassmembers class kotlinx.serialization.json.** {
-    *** Companion;
-}
--keepclasseswithmembers class kotlinx.serialization.json.** {
-    kotlinx.serialization.KSerializer serializer(...);
+-keep,includedescriptorclasses class *$$serializer { *; }
+
+-keepclassmembers class * {
+    @kotlinx.serialization.Serializable *;
 }
 
--keep,includedescriptorclasses class com.shahvani.app.data.remote.dto.**$$serializer { *; }
--keepclassmembers class com.shahvani.app.data.remote.dto.** {
-    *** Companion;
-}
--keepclasseswithmembers class com.shahvani.app.data.remote.dto.** {
+-keepclasseswithmembers class * {
     kotlinx.serialization.KSerializer serializer(...);
+    kotlinx.serialization.KSerializer getSerializer(...);
+}
+
+-keepclassmembers class * {
+    kotlinx.serialization.KSerializer serializer;
 }
 
 # OkHttp

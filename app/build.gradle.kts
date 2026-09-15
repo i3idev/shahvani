@@ -21,10 +21,36 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            val keystorePropertiesFile = rootProject.file("keystore.properties")
+            val keystoreProperties = java.util.Properties()
+            if (keystorePropertiesFile.exists()) {
+                keystoreProperties.load(keystorePropertiesFile.inputStream())
+            }
+            val storeFile = keystoreProperties["storeFile"]?.let { java.io.File(it) }
+            if (storeFile == null) {
+                throw gradleException(
+                    "Release signing not configured. Create 'keystore.properties' in project root with " +
+                    "storeFile, storePassword, keyAlias, keyPassword. Or set STORE_FILE, STORE_PASSWORD, " +
+                    "KEY_ALIAS, KEY_PASSWORD environment variables."
+                )
+            }
+            setStoreFile(storeFile)
+            setStorePassword(keystoreProperties["storePassword"] as? String ?: System.getenv("STORE_PASSWORD")
+                ?: throw gradleException("STORE_PASSWORD not set"))
+            setKeyAlias(keystoreProperties["keyAlias"] as? String ?: System.getenv("KEY_ALIAS")
+                ?: throw gradleException("KEY_ALIAS not set"))
+            setKeyPassword(keystoreProperties["keyPassword"] as? String ?: System.getenv("KEY_PASSWORD")
+                ?: throw gradleException("KEY_PASSWORD not set"))
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
